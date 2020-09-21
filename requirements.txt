@@ -12,6 +12,15 @@ python-dotenv>=0.5.1
 jupyter
 ipython
 nbautoexport
+matplotlib
 pandas
 plotly
 nbconvert<6
+nb_black
+
+beautifulsoup4
+wayback-machine-scraper
+pyarrow
+pqdm
+psutil
+transformers[torch]

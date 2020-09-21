@@ -1,4 +1,4 @@
-.PHONY: clean data lint requirements sync_data_to_s3 sync_data_from_s3
+.PHONY: clean data lint requirements sync_data_to_s3 sync_data_from_s3 notebooks
 
 #################################################################################
 # GLOBALS                                                                       #
@@ -22,11 +22,12 @@ endif
 
 ## Install Python Dependencies
 requirements: test_environment
+	conda install -c plotly plotly-orca
 	$(PYTHON_INTERPRETER) -m pip install -U pip setuptools wheel
 	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
 
 ## Make Dataset
-data: requirements
+data:
 	$(PYTHON_INTERPRETER) src/data/make_dataset.py data/raw data/processed
 
 ## Delete all compiled Python files
@@ -80,7 +81,18 @@ test_environment:
 # PROJECT RULES                                                                 #
 #################################################################################
 
+## Scrape all incidents this fire season into data/raw
+scrape:
+	cd data/raw && wayback-machine-scraper 'inciweb.nwcg.gov/accessible-view/' -f 20200801 -a 'incident'
 
+## Run all the notebooks in parallel and generate the .py versions
+notebooks:
+	cd notebooks && \
+	find . -type f -name "*.ipynb" -not -name "*checkpoint*" | \
+	sort | \
+	xargs -I_ -n 1 -P 8 \
+	jupyter nbconvert --execute --to notebook --output _ _
+	nbautoexport export notebooks
 
 #################################################################################
 # Self Documenting Commands                                                     #

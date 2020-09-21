@@ -1,7 +1,17 @@
 wildfire_tracker
 ==============================
 
-A project that checks the active wildfires.
+A project that analyzes active wildfires.
+
+Data is scraped from the wayback machine's archives of the NWCG incident information system. Scraping starts at whatever was present on the site on 2020-08-01 and scrapes all incident snapshots after that time.
+https://inciweb.nwcg.gov/accessible-view/
+
+To gather the data in `data/raw`, run the command:
+
+```
+make scrape
+```
+
 
 Project Organization
 ------------
